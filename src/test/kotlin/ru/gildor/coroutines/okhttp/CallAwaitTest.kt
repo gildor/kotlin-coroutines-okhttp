@@ -2,6 +2,7 @@ package ru.gildor.coroutines.okhttp
 
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
@@ -24,14 +25,30 @@ class CallAwaitTest {
         client.newCall(request("http://localhost/exception")).await()
     }
 
-    val client: OkHttpClient = OkHttpClient.Builder()
+    @Test
+    fun awaitCancel() = testBlocking {
+        val call = client.newCall(request("http://localhost/wait"))
+        val job = async(coroutineContext) {
+            call.await()
+        }
+        assertFalse(call.isCanceled)
+        job.cancel()
+        assertTrue(call.isCanceled)
+    }
+
+    private val client: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request()
+                val command = request.url().pathSegments()[0]
                 val builder = Response.Builder()
                         .request(request)
                         .protocol(Protocol.HTTP_1_1)
-                when(request.url().pathSegments()[0]) {
+                when (command) {
                     "error" -> builder.code(401).message("Error")
+                    "wait" -> {
+                        Thread.sleep(100)
+                        builder.code(200).message("Ok after wait")
+                    }
                     "ok" -> builder.code(200).message("Ok")
                     else -> throw IOException()
                 }.build()

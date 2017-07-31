@@ -1,12 +1,12 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-def description = "Provides Kotlin Coroutines suspendable await() extensions for Retrofit Call"
-def githubId = "gildor/kotlin-coroutines-retrofit"
+def description = "Provides Kotlin Coroutines suspendable await() extensions for okhttp3.Call"
+def githubId = "gildor/kotlin-coroutines-okhttp"
 def repoWeb = "https://github.com/${githubId}"
 def repoVcs = "${repoWeb}.git"
 def issueTracker = "${repoWeb}/issues"
-def tags = ['retrofit', 'kotlin', 'coroutines']
+def tags = ['okhttp', 'kotlin', 'coroutines']
 def licenseId = "Apache-2.0"
 def licenseName = "The Apache Software License, Version 2.0"
 def licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
