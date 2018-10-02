@@ -25,13 +25,12 @@ suspend fun Call.await(): Response {
             }
         })
 
-        continuation.invokeOnCompletion {
-            if (continuation.isCancelled)
-                try {
-                    cancel()
-                } catch (ex: Throwable) {
-                    //Ignore cancel exception
-                }
+        continuation.invokeOnCancellation {
+            try {
+                cancel()
+            } catch (ex: Throwable) {
+                //Ignore cancel exception
+            }
         }
     }
 }
