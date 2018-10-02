@@ -1,13 +1,10 @@
 package ru.gildor.coroutines.okhttp
 
 import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
-import okhttp3.OkHttpClient
-import okhttp3.Protocol
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -37,23 +34,24 @@ class CallAwaitTest {
     }
 
     private val client: OkHttpClient = OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val request = chain.request()
-                val command = request.url().pathSegments()[0]
-                val builder = Response.Builder()
-                        .request(request)
-                        .protocol(Protocol.HTTP_1_1)
-                when (command) {
-                    "error" -> builder.code(401).message("Error")
-                    "wait" -> {
-                        Thread.sleep(100)
-                        builder.code(200).message("Ok after wait")
-                    }
-                    "ok" -> builder.code(200).message("Ok")
-                    else -> throw IOException()
-                }.build()
-            }
-            .build()
+        .addInterceptor { chain ->
+            val request = chain.request()
+            val command = request.url().pathSegments()[0]
+            val builder = Response.Builder()
+                .body(ResponseBody.create(null, ByteArray(0)))
+                .request(request)
+                .protocol(Protocol.HTTP_1_1)
+            when (command) {
+                "error" -> builder.code(401).message("Error")
+                "wait" -> {
+                    Thread.sleep(100)
+                    builder.code(200).message("Ok after wait")
+                }
+                "ok" -> builder.code(200).message("Ok")
+                else -> throw IOException()
+            }.build()
+        }
+        .build()
 
     private fun request(url: String): Request {
         return Request.Builder().url(url).build()
@@ -62,5 +60,5 @@ class CallAwaitTest {
 }
 
 private fun testBlocking(block: suspend CoroutineScope.() -> Unit) {
-    runBlocking(Unconfined, block)
+    runBlocking(Dispatchers.Unconfined, block)
 }
