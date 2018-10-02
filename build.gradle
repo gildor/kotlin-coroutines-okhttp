@@ -18,10 +18,10 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.2.71"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.0"
-    implementation "com.squareup.okhttp3:okhttp:3.11.0"
-    testImplementation 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:1.2.71"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.0"
+    compile "com.squareup.okhttp3:okhttp:3.11.0"
+    testCompile 'junit:junit:4.12'
 }
 
 kotlin.experimental.coroutines = "enable"
