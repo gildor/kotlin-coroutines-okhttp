@@ -5,8 +5,7 @@ import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import okhttp3.*
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 import java.io.IOException
 
@@ -17,9 +16,48 @@ class CallAwaitTest {
         assertFalse(client.newCall(request("http://localhost/error")).await().isSuccessful)
     }
 
-    @Test(expected = IOException::class)
-    fun awaitException() = testBlocking {
-        client.newCall(request("http://localhost/exception")).await()
+    @Test()
+    fun awaitExceptionRecorded() = testBlocking {
+        val currentStack = Exception().stackTrace
+
+        val exception = try {
+            client.newCall(request("http://localhost/exception")).await()
+            null
+        } catch (e: Exception) {
+            e
+        }
+
+        assertNotNull("Did not throw an Exception", exception)
+        assertTrue("Received an Exception, but it is not an IOException", exception is IOException)
+
+        exception as IOException
+
+        // Verify that stack trace was recorded properly.
+        // We drop 1 element from the currentStack since the line numbers of the
+        // stack trace record in this method and the one recorded in [await] don't match.
+        val matchedStackTraceEntries = currentStack.drop(1).zip(exception.stackTrace.drop(3))
+        matchedStackTraceEntries.forEach { (a, b) -> assertEquals(a, b) }
+    }
+
+    @Test()
+    fun awaitExceptionNonRecorded() = testBlocking {
+        val currentStack = Exception().stackTrace
+
+        val exception = try {
+            client.newCall(request("http://localhost/exception")).await(recordStackTrace = false)
+            null
+        } catch (e: Exception) {
+            e
+        }
+
+        assertNotNull("Did not throw an Exception", exception)
+        assertTrue("Received an Exception, but it is not an IOException", exception is IOException)
+
+        exception as IOException
+
+        // See test [awaitExceptionRecorded] for explanation
+        val matchedStackTraceEntries = currentStack.drop(1).zip(exception.stackTrace.drop(3))
+        matchedStackTraceEntries.forEach { (a, b) -> assertNotEquals(a, b) }
     }
 
     @Test
