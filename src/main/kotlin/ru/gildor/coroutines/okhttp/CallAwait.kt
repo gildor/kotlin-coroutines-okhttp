@@ -1,10 +1,12 @@
 package ru.gildor.coroutines.okhttp
 
-import kotlinx.coroutines.experimental.suspendCancellableCoroutine
+import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * Suspend extension that allows suspend [Call] inside coroutine.
@@ -25,13 +27,12 @@ suspend fun Call.await(): Response {
             }
         })
 
-        continuation.invokeOnCompletion {
-            if (continuation.isCancelled)
-                try {
-                    cancel()
-                } catch (ex: Throwable) {
-                    //Ignore cancel exception
-                }
+        continuation.invokeOnCancellation {
+            try {
+                cancel()
+            } catch (ex: Throwable) {
+                //Ignore cancel exception
+            }
         }
     }
 }
