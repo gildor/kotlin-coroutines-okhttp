@@ -1,0 +1,9 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8u181-jdk
+    steps:
+      - checkout
+      - run:
+          command: ./gradlew build
