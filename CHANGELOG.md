@@ -1,9 +1,5 @@
 # CHANGELOG
 
-## Version 1.1.0 (2019-03-17)
-
-- Support of stack recording, see [README.md](README.md#Debugging)
-
 ## Version 1.0.0 (2019-03-16)
 
 First version published on Bintray and Maven Central
