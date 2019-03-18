@@ -32,7 +32,7 @@ See this issue about support of non-blocking API for Okio - https://github.com/s
 
 Download the [JAR](https://bintray.com/gildor/maven/kotlin-coroutines-okhttp#files/ru/gildor/coroutines/kotlin-coroutines-okhttp):
 
-Artifacts are available on [JCenter](https://bintray.com/gildor/maven/kotlin-coroutines-okhttp) and Maven Central
+Artifacts are available on [JCenter](https://bintray.com/gildor/maven/kotlin-coroutines-okhttp) and [Maven Central](https://search.maven.org/search?q=a:kotlin-coroutines-okhttp)
 
 Gradle:
 
