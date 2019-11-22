@@ -37,7 +37,7 @@ Artifacts are available on [JCenter](https://bintray.com/gildor/maven/kotlin-cor
 Gradle:
 
 ```kotlin
-implementation("ru.gildor.coroutines:kotlin-coroutines-okhttp:1.0.0")
+implementation("ru.gildor.coroutines:kotlin-coroutines-okhttp:1.0")
 ```
 
 Maven:
@@ -46,7 +46,7 @@ Maven:
 <dependency>
   <groupId>ru.gildor.coroutines</groupId>
   <artifactId>kotlin-coroutines-okhttp</artifactId>
-  <version>1.0.0</version>
+  <version>1.0</version>
 </dependency>
 ```
 
