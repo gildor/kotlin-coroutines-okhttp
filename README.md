@@ -18,8 +18,8 @@ val request = Request.Builder().url("https://example.org/").build()
 
 suspend fun main() {
     // Do call and await() for result from any suspend function
-    val result = client.newCall(request).await()
-    println("${result.code()}: ${result.message()}")
+    val response = client.newCall(request).await()
+    println("${response.code}: ${response.message}")
 }
 ```
 
