@@ -56,3 +56,21 @@ public suspend fun Call.await(recordStack: Boolean = isRecordStack): Response {
         }
     }
 }
+
+
+/**
+ * Suspend extension that allows suspend [Call] inside coroutine and [use] the [Response].
+ *
+ * [recordStack] enables track recording, so in case of exception stacktrace will contain call stacktrace, may be useful for debugging
+ *      Not free! Creates exception on each request so disabled by default, but may be enabled using system properties:
+ *
+ *      ```
+ *      System.setProperty(OKHTTP_STACK_RECORDER_PROPERTY, OKHTTP_STACK_RECORDER_ON)
+ *      ```
+ *      see [README.md](https://github.com/gildor/kotlin-coroutines-okhttp/blob/master/README.md#Debugging) with details about debugging using this feature
+ *
+ * @return what the [block[ has returned
+ * @throws IOException
+ */
+public suspend inline fun <R> Call.await(recordStack: Boolean = isRecordStack, block: (Response) -> R): R =
+    await(recordStack).use(block)
